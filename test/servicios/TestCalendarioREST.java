@@ -60,6 +60,7 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 		String jsonString = jsonObject.toString();
 		
 		HttpPost post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		HttpResponse response = client.execute(post);
 
@@ -74,6 +75,7 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 		jsonString = jsonObject.toString();
 
 		post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		response = client.execute(post);
 
@@ -88,6 +90,7 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 		jsonString = jsonObject.toString();
 
 		post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		response = client.execute(post);
 
@@ -103,6 +106,7 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 		String url = BASE_URL + "/calendarios/1";
 
 		HttpGet request = new HttpGet(url);
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 
 		HttpResponse response = client.execute(request);
 		
@@ -121,6 +125,7 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 		String url = BASE_URL + "/calendarios";
 
 		HttpGet request = new HttpGet(url);
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 
 		HttpResponse response = client.execute(request);
 		
@@ -144,6 +149,7 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 
 		String url = BASE_URL + "/calendarios/4";
 		HttpPut request = new HttpPut(url);
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		request.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		HttpResponse response = client.execute(request);
 
@@ -162,6 +168,7 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 		String url = BASE_URL + "/calendarios/2";
 		
 		HttpDelete request = new HttpDelete(url);
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		
 		HttpResponse response = client.execute(request);
 		

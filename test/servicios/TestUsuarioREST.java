@@ -202,7 +202,7 @@ public class TestUsuarioREST {
 		String url = BASE_URL + "/usuarios/1";
 
 		HttpGet request = new HttpGet(url);
-
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		HttpResponse response = client.execute(request);
 		
 		System.out.println("\nGET "+url);
@@ -220,7 +220,7 @@ public class TestUsuarioREST {
 		String url = BASE_URL + "/usuarios";
 
 		HttpGet request = new HttpGet(url);
-
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		HttpResponse response = client.execute(request);
 		
 		System.out.println("\nGET "+url);
@@ -243,6 +243,7 @@ public class TestUsuarioREST {
 
 		String url = BASE_URL + "/usuarios/1";
 		HttpPut request = new HttpPut(url);
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		request.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		HttpResponse response = client.execute(request);
 
@@ -261,7 +262,7 @@ public class TestUsuarioREST {
 		String url = BASE_URL + "/usuarios/3";
 		
 		HttpDelete request = new HttpDelete(url);
-		
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		HttpResponse response = client.execute(request);
 		
 		System.out.println("\nDELETE "+url);

@@ -16,8 +16,9 @@ public class AutenticacionService {
 	    @Consumes("application/json")
 	    public Response autenticarUser(Credencial credentials){
   	      String username = credentials.getNickName();
-	        String password = credentials.getPassword();
-	        try {
+	      String password = credentials.getPassword();
+	      
+	      try {
      
 	            autenticar(username, password);
          
@@ -43,7 +44,7 @@ public class AutenticacionService {
 	    }
 	    
 	    private String emitirToken(String username){
-	           String token = TokenHelper.generarToken(username);
+	        String token = TokenHelper.generarToken(username);
 	    	TokenHelper.setToken(token, username);
 	    	return token;
 

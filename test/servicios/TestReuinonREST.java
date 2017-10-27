@@ -30,10 +30,14 @@ public class TestReuinonREST {
 
 	@Test
 	public void testUsuarioREST() throws ClientProtocolException, IOException {
-//		crearReuniones();
-//		getReunion();
-//		listarReuniones();
+		crearReuniones();
+		getReunion();
+		listarReuniones();
 		getReunionesEntreFechas();
+		getReunionesByUserAndDay();
+		getReunionesSuperpuestas();
+		updateReunion();
+		deleteReunion();
 	}
 
 	private String getResultContent(HttpResponse response) throws IOException {
@@ -62,11 +66,12 @@ public class TestReuinonREST {
 		jsonObject.put("dia", 01);
 		jsonObject.put("horaI", 11);
 		jsonObject.put("horaF", 13);
-		jsonObject.put("idSala", 1);
+		jsonObject.put("idSala", 21);
 		jsonObject.put("idCalendario", 2);
 		String jsonString = jsonObject.toString();
 
 		HttpPost post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		HttpResponse response = client.execute(post);
 
@@ -81,11 +86,12 @@ public class TestReuinonREST {
 		jsonObject.put("dia", 01);
 		jsonObject.put("horaI", 14);
 		jsonObject.put("horaF", 18);
-		jsonObject.put("idSala", 1);
+		jsonObject.put("idSala", 21);
 		jsonObject.put("idCalendario", 2);
 		jsonString = jsonObject.toString();
 
 		post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		response = client.execute(post);
 
@@ -98,13 +104,35 @@ public class TestReuinonREST {
 		jsonObject.put("anio", 2017);
 		jsonObject.put("mes", 01);
 		jsonObject.put("dia", 01);
-		jsonObject.put("horaI", 17);
+		jsonObject.put("horaI", 19);
 		jsonObject.put("horaF", 20);
-		jsonObject.put("idSala", 1);
+		jsonObject.put("idSala", 21);
 		jsonObject.put("idCalendario", 2);
 		jsonString = jsonObject.toString();
 
 		post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
+		response = client.execute(post);
+
+		System.out.println("\nPOST "+url);
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+		resultContent = getResultContent(response);
+		System.out.println("Response Content : " + resultContent);
+		
+		//Test mismo horario-mismo calendario -distinto dia
+		jsonObject = mapper.createObjectNode();
+		jsonObject.put("anio", 2017);
+		jsonObject.put("mes", 01);
+		jsonObject.put("dia", 02);
+		jsonObject.put("horaI", 19);
+		jsonObject.put("horaF", 20);
+		jsonObject.put("idSala", 21);
+		jsonObject.put("idCalendario", 2);
+		jsonString = jsonObject.toString();
+
+		post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		response = client.execute(post);
 
@@ -112,6 +140,151 @@ public class TestReuinonREST {
 		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
 		resultContent = getResultContent(response);
 		System.out.println("Response Content : " + resultContent);	
+		
+		//Test mismo dia - mismo horario -distinito calendario (superposicion)
+		jsonObject = mapper.createObjectNode();
+		jsonObject.put("anio", 2017);
+		jsonObject.put("mes", 01);
+		jsonObject.put("dia", 01);
+		jsonObject.put("horaI", 19);
+		jsonObject.put("horaF", 20);
+		jsonObject.put("idSala", 21);
+		jsonObject.put("idCalendario", 6);
+		jsonString = jsonObject.toString();
+
+		post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
+		response = client.execute(post);
+
+		System.out.println("\nPOST "+url);
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+		resultContent = getResultContent(response);
+		System.out.println("Response Content : " + resultContent);	
+		
+		//Superposicion de horario en el mismo calendario(superposicion)
+		jsonObject = mapper.createObjectNode();
+		jsonObject.put("anio", 2017);
+		jsonObject.put("mes", 01);
+		jsonObject.put("dia", 01);
+		jsonObject.put("horaI", 14);
+		jsonObject.put("horaF", 18);
+		jsonObject.put("idSala", 22);
+		jsonObject.put("idCalendario", 2);
+		jsonString = jsonObject.toString();
+
+		post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
+		response = client.execute(post);
+
+		System.out.println("\nPOST "+url);
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+		resultContent = getResultContent(response);
+		System.out.println("Response Content : " + resultContent);	
+		
+		jsonObject = mapper.createObjectNode();
+		jsonObject.put("anio", 2017);
+		jsonObject.put("mes", 02);
+		jsonObject.put("dia", 01);
+		jsonObject.put("horaI", 14);
+		jsonObject.put("horaF", 20);
+		jsonObject.put("idSala", 22);
+		jsonObject.put("idCalendario", 2);
+		jsonString = jsonObject.toString();
+
+		post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
+		response = client.execute(post);
+
+		System.out.println("\nPOST "+url);
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+		resultContent = getResultContent(response);
+		System.out.println("Response Content : " + resultContent);
+		
+		//usuario Gomez
+		
+		jsonObject = mapper.createObjectNode();
+		jsonObject.put("anio", 2017);
+		jsonObject.put("mes", 02);
+		jsonObject.put("dia", 02);
+		jsonObject.put("horaI", 8);
+		jsonObject.put("horaF", 10);
+		jsonObject.put("idSala", 22);
+		jsonObject.put("idCalendario", 6);
+		jsonString = jsonObject.toString();
+
+		post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
+		response = client.execute(post);
+
+		System.out.println("\nPOST "+url);
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+		resultContent = getResultContent(response);
+		System.out.println("Response Content : " + resultContent);
+		
+		jsonObject = mapper.createObjectNode();
+		jsonObject.put("anio", 2017);
+		jsonObject.put("mes", 02);
+		jsonObject.put("dia", 02);
+		jsonObject.put("horaI", 11);
+		jsonObject.put("horaF", 15);
+		jsonObject.put("idSala", 22);
+		jsonObject.put("idCalendario", 6);
+		jsonString = jsonObject.toString();
+
+		post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
+		response = client.execute(post);
+
+		System.out.println("\nPOST "+url);
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+		resultContent = getResultContent(response);
+		System.out.println("Response Content : " + resultContent);
+		
+		jsonObject = mapper.createObjectNode();
+		jsonObject.put("anio", 2017);
+		jsonObject.put("mes", 02);
+		jsonObject.put("dia", 02);
+		jsonObject.put("horaI", 18);
+		jsonObject.put("horaF", 22);
+		jsonObject.put("idSala", 22);
+		jsonObject.put("idCalendario", 6);
+		jsonString = jsonObject.toString();
+
+		post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
+		response = client.execute(post);
+
+		System.out.println("\nPOST "+url);
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+		resultContent = getResultContent(response);
+		System.out.println("Response Content : " + resultContent);
+		
+		jsonObject = mapper.createObjectNode();
+		jsonObject.put("anio", 2017);
+		jsonObject.put("mes", 01);
+		jsonObject.put("dia", 01);
+		jsonObject.put("horaI", 8);
+		jsonObject.put("horaF", 10);
+		jsonObject.put("idSala", 22);
+		jsonObject.put("idCalendario", 6);
+		jsonString = jsonObject.toString();
+
+		post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
+		response = client.execute(post);
+
+		System.out.println("\nPOST "+url);
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+		resultContent = getResultContent(response);
+		System.out.println("Response Content : " + resultContent);
+		
 	}
 
 	public void getReunion() throws ClientProtocolException, IOException {
@@ -119,7 +292,7 @@ public class TestReuinonREST {
 		String url = BASE_URL + "/reuniones/1";
 
 		HttpGet request = new HttpGet(url);
-
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		HttpResponse response = client.execute(request);
 
 		System.out.println("\nGET "+url);
@@ -137,7 +310,7 @@ public class TestReuinonREST {
 		String url = BASE_URL + "/reuniones";
 
 		HttpGet request = new HttpGet(url);
-
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		HttpResponse response = client.execute(request);
 		
 		System.out.println("\nGET "+url);
@@ -154,7 +327,7 @@ public class TestReuinonREST {
 		String url = BASE_URL + "/reuniones/getReunionesEntreFechas?day1=2017-10-17&&day2=2017-15-17";
 		
 		HttpGet request = new HttpGet(url);
-
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		HttpResponse response = client.execute(request);
 		
 		System.out.println("\nGET "+url);
@@ -166,7 +339,82 @@ public class TestReuinonREST {
 		System.out.println("Response Content : " + resultContent);
 
 	}
+	
+	public void getReunionesByUserAndDay() throws ClientProtocolException, IOException{
+		String url = BASE_URL + "/reuniones/getReunionesByUserAndDay?iduser=1&&day=2017-10-15";
+		
+		HttpGet request = new HttpGet(url);
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		HttpResponse response = client.execute(request);
+		
+		System.out.println("\nGET "+url);
 
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+
+		String resultContent = getResultContent(response);
+
+		System.out.println("Response Content : " + resultContent);
+
+	}
+	
+	public void getReunionesSuperpuestas() throws ClientProtocolException, IOException{
+		String url = BASE_URL + "/reuniones/getReunionesSuperpuestas?iduser=1&&fechaInicio=2017-10-1710:00:00&&fechaFin=2017-10-1713:00:00";
+		
+		HttpGet request = new HttpGet(url);
+
+		HttpResponse response = client.execute(request);
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");	
+		System.out.println("\nGET "+url);
+
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+
+		String resultContent = getResultContent(response);
+
+		System.out.println("Response Content : " + resultContent);
+
+	}
+	
+	public void deleteReunion() throws ClientProtocolException, IOException {
+
+		String url = BASE_URL + "/reuniones/28";
+		
+		HttpDelete request = new HttpDelete(url);
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		HttpResponse response = client.execute(request);
+		
+		System.out.println("\nDELETE "+url);
+
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+
+		String resultContent = getResultContent(response);
+
+		System.out.println("Response Content : " + resultContent);
+
+	}
+	
+	public void updateReunion() throws ClientProtocolException, IOException {
+
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode jsonObject = mapper.createObjectNode();
+		jsonObject.put("nombre", "Test");
+		jsonObject.put("apellido", "JUnit");
+		String jsonString = jsonObject.toString();
+
+		String url = BASE_URL + "/reuniones/30";
+		HttpPut request = new HttpPut(url);
+		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		request.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
+		HttpResponse response = client.execute(request);
+
+		System.out.println("\nPUT "+url);
+		
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+
+		String resultContent = getResultContent(response);
+
+		System.out.println("Response Content : " + resultContent);
+
+	}
 }
 
 

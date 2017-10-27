@@ -18,17 +18,20 @@ import javax.ws.rs.core.Response;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import entidades.Calendario;
+import login.Secured;
 
 @Path("/calendarios")
 public class CalendarioREST {
 
 	@GET
+	@Secured
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Calendario> getAllUser(){
 		return CalendarioDAO.getInstance().findAll();
 	}
 
 	@GET
+	@Secured
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Calendario calendariofindById(@PathParam("id") String msg) {
@@ -42,6 +45,7 @@ public class CalendarioREST {
 	}
 
 	@POST
+	@Secured
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createCalendario(ObjectNode json) {
@@ -57,6 +61,7 @@ public class CalendarioREST {
 	}
 
 	@DELETE
+	@Secured
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteCalendario(@PathParam("id") int id) {
@@ -67,6 +72,7 @@ public class CalendarioREST {
 	}
 
 	@PUT
+	@Secured
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

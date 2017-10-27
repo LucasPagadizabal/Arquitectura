@@ -100,7 +100,7 @@ public class TestSalaREST {
 	
 	public void getSala() throws ClientProtocolException, IOException {
 
-		String url = BASE_URL + "/salas/1";
+		String url = BASE_URL + "/salas/21";
 
 		HttpGet request = new HttpGet(url);
 
@@ -142,7 +142,7 @@ public class TestSalaREST {
 		jsonObject.put("descripcion", "JUnit Update");
 		String jsonString = jsonObject.toString();
 
-		String url = BASE_URL + "/salas/2";
+		String url = BASE_URL + "/salas/22";
 		HttpPut request = new HttpPut(url);
 		request.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		HttpResponse response = client.execute(request);
@@ -159,7 +159,7 @@ public class TestSalaREST {
 
 	public void deleteSala() throws ClientProtocolException, IOException {
 
-		String url = BASE_URL + "/salas/3";
+		String url = BASE_URL + "/salas/23";
 		
 		HttpDelete request = new HttpDelete(url);
 		

@@ -74,9 +74,9 @@ public static ReunionDAO daoReunion;
 		entityManager.getTransaction().begin();
 		entityManager.remove(entityManager.find(Reunion.class, id));
 		entityManager.getTransaction().commit();
+		Reunion reunion= entityManager.find(Reunion.class, id);
 		entityManager.close();
 		
-		Reunion reunion= entityManager.find(Reunion.class, id);
 		if(reunion==null)return true;
 		return false;
 	}

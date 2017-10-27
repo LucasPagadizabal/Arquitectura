@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -26,17 +27,21 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 import entidades.Reunion;
+import login.Secured;
+import servicios.UsuarioREST.RecursoNoExiste;
 
 @Path("/reuniones")
 public class ReunionREST {
 
 	@GET
+	@Secured
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Reunion> getAllReunion(){
 		return ReunionDAO.getInstance().findAll();
 	}
 
 	@GET
+	@Secured
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Reunion getUserById(@PathParam("id") String msg) {
@@ -49,6 +54,7 @@ public class ReunionREST {
 	}
 
 	@GET
+	@Secured
 	@Path("/getReunionesByUserAndDay")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Reunion> getReunionesByUserAndDay(@QueryParam("iduser") int iduser, @QueryParam("day") String day) {
@@ -70,6 +76,7 @@ public class ReunionREST {
 
 
 	@GET
+	@Secured
 	@Path("/getReunionesEntreFechas")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Reunion> getReunionesEntreFechas(@QueryParam("day1") String day1, @QueryParam("day2") String day2) {
@@ -95,6 +102,7 @@ public class ReunionREST {
 	}
 
 	@GET
+	@Secured
 	@Path("/getReunionesSuperpuestas")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Reunion> getReunionesSuperpuestas(@QueryParam("iduser") int iduser, @QueryParam("fechaInicio") String fechaInicio, @QueryParam("fechaFin") String fechaFin) {
@@ -119,6 +127,7 @@ public class ReunionREST {
 	}
 	
 	@POST
+	@Secured
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createReunion(ObjectNode json) throws ParseException{
@@ -132,8 +141,17 @@ public class ReunionREST {
 		Reunion reunion= ReunionDAO.getInstance().createReunion(fechaInicio, fechaFin, idSala, idCalendario);
 		if(reunion!=null)	return Response.status(201).entity(reunion).build();
 
-		////		throw new RecursoDuplicado(reunion.getId());
 		throw new RecursoNoCreado();
+	}
+	
+	@DELETE
+	@Secured
+	@Path("/{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteReunion(@PathParam("id") int id) {
+		boolean result= ReunionDAO.getInstance().delete(id);
+		if(result) return Response.status(201).build();
+		throw new RecursoNoExiste(id);
 	}
 	
 	public class RecursoNoCreado extends WebApplicationException {
@@ -147,6 +165,13 @@ public class ReunionREST {
 	     public RecursoNoEncontrado() {
 	         super(Response.status(Response.Status.CONFLICT)
 	             .entity("El recurso solicitado no se encontro ").type(MediaType.TEXT_PLAIN).build());
+	     }
+	}
+	
+	public class RecursoNoExiste extends WebApplicationException {
+	     public RecursoNoExiste(int id) {
+	         super(Response.status(Response.Status.NOT_FOUND)
+	             .entity("El recurso con id "+id+" no fue encontrado").type(MediaType.TEXT_PLAIN).build());
 	     }
 	}
 }

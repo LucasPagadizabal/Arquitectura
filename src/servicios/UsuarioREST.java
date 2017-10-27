@@ -1,5 +1,8 @@
 package servicios;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -15,19 +18,24 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import entidades.Reunion;
 import entidades.Usuario;
+import login.Secured;
+import servicios.ReunionREST.RecursoNoEncontrado;
 
 
 @Path("/usuarios")
 public class UsuarioREST {
 	
 	@GET
+	@Secured
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Usuario> getAllUser(){
 		return UsuarioDAO.getInstance().findAll();
 	}
 	
 	@GET
+	@Secured
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Usuario getUserById(@PathParam("id") String msg) {
@@ -52,6 +60,7 @@ public class UsuarioREST {
 	}
 	
 	@DELETE
+	@Secured
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteUsuario(@PathParam("id") int id) {
@@ -62,6 +71,7 @@ public class UsuarioREST {
 	}
 	
 	@PUT
+	@Secured
 	@Path("/{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -84,4 +94,20 @@ public class UsuarioREST {
 	             .entity("El recurso con ID "+id+" no se pudo crear").type(MediaType.TEXT_PLAIN).build());
 	     }
 	}
+	
+	@GET
+	@Path("/getNickName")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Usuario login(@QueryParam("nickName") String nickname, @QueryParam("password") String pass) {
+		
+		Usuario aux = new Usuario();
+		aux.setNickName(nickname);
+		aux.setPassword(pass);
+		Usuario user = UsuarioDAO.getInstance().login(aux);
+		if(user!=null)
+			return user;
+		else
+			throw new RecursoNoExiste(1);
+	}
+
 }

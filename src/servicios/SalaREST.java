@@ -30,9 +30,7 @@ public class SalaREST {
 		Sala sala= SalaDAO.getInstance().findById(id);
 		if(sala!=null)
 			return sala;
-		else
-//			throw new RecursoNoExiste(id);
-		return null;
+		else throw new RecursoNoEncontrado(id);
 	}
 	
 	@GET
@@ -47,8 +45,7 @@ public class SalaREST {
 	public Response createUsuario(Sala sala) {
 		Sala result= SalaDAO.getInstance().persist(sala);
 		if(result==null) {
-//			throw new RecursoNoCreado(user.getDni());
-			return null;
+			throw new RecursoNoCreado();
 		}else {
 			return Response.status(201).entity(sala).build();
 		}
@@ -60,8 +57,7 @@ public class SalaREST {
 	public Response deleteSala(@PathParam("id") int id) {
 		boolean result= SalaDAO.getInstance().delete(id);
 		if(result) return Response.status(201).build();
-		return null;
-//		throw new RecursoNoExiste(id);
+		throw new RecursoNoExiste(id);
 	}
 	
 	@PUT
@@ -73,5 +69,25 @@ public class SalaREST {
 		if(result!=null) return Response.status(201).entity(result).build();
 //		throw new RecursoNoExiste(id);
 		return null;
+	}
+	
+	public class RecursoNoCreado extends WebApplicationException {
+	     public RecursoNoCreado() {
+	         super(Response.status(Response.Status.CONFLICT)
+	             .entity("El recurso no se pudo crear por superposicion de horario").type(MediaType.TEXT_PLAIN).build());
+	     }
+	}
+	
+	public class RecursoNoEncontrado extends WebApplicationException {
+	     public RecursoNoEncontrado(int id) {
+	         super(Response.status(Response.Status.CONFLICT)
+	             .entity("El recurso con el id:"+id+" solicitado no se encontro ").type(MediaType.TEXT_PLAIN).build());
+	     }
+	}
+	public class RecursoNoExiste extends WebApplicationException {
+	     public RecursoNoExiste(int id) {
+	         super(Response.status(Response.Status.NOT_FOUND)
+	             .entity("El recurso con id "+id+" no fue encontrado").type(MediaType.TEXT_PLAIN).build());
+	     }
 	}
 }
