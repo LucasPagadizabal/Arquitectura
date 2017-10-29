@@ -22,12 +22,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 public class TestCalendarioREST {
-	
+
 	public final String BASE_URL="http://localhost:8080/Practico-Jersey/rest";
 	public final HttpClient client = HttpClientBuilder.create().build();
-	
+	String token;
 	@Test
 	public void testUsuarioREST() throws ClientProtocolException, IOException {
+		token = getToken();
 		crearCalendarios();
 		getCalendario();
 		listarCalendarios();
@@ -48,19 +49,18 @@ public class TestCalendarioREST {
 			return "";
 		}
 	}
-	
-public void crearCalendarios() throws ClientProtocolException, IOException {
-		
-		String url = BASE_URL + "/calendarios";
-		
+
+	public String getToken() throws ClientProtocolException, IOException {
+
+		String url = BASE_URL + "/autenticacion";
+
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonObject = mapper.createObjectNode();
-		jsonObject.put("nombre", "Facultad");
-		jsonObject.put("dniuser", 1);
+		jsonObject.put("nickName", "Juan");
+		jsonObject.put("password", "123456");
 		String jsonString = jsonObject.toString();
-		
+
 		HttpPost post = new HttpPost(url);
-		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
 		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		HttpResponse response = client.execute(post);
 
@@ -68,14 +68,36 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
 		String resultContent = getResultContent(response);
 		System.out.println("Response Content : " + resultContent);
-		
+		return resultContent;
+
+	}
+	public void crearCalendarios() throws ClientProtocolException, IOException {
+
+		String url = BASE_URL + "/calendarios";
+
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode jsonObject = mapper.createObjectNode();
+		jsonObject.put("nombre", "Facultad");
+		jsonObject.put("dniuser", 1);
+		String jsonString = jsonObject.toString();
+
+		HttpPost post = new HttpPost(url);
+		post.addHeader("Authorization", "Bearer-"+token+"");
+		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
+		HttpResponse response = client.execute(post);
+
+		System.out.println("\nPOST "+url);
+		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+		String resultContent = getResultContent(response);
+		System.out.println("Response Content : " + resultContent);
+
 		jsonObject = mapper.createObjectNode();
 		jsonObject.put("nombre", "Trabajo");
 		jsonObject.put("dniuser", 1);
 		jsonString = jsonObject.toString();
 
 		post = new HttpPost(url);
-		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		post.addHeader("Authorization", "Bearer-"+token+"");
 		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		response = client.execute(post);
 
@@ -83,14 +105,14 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
 		resultContent = getResultContent(response);
 		System.out.println("Response Content : " + resultContent);
-		
+
 		jsonObject = mapper.createObjectNode();
 		jsonObject.put("nombre", "Casa");
 		jsonObject.put("dniuser", 1);
 		jsonString = jsonObject.toString();
 
 		post = new HttpPost(url);
-		post.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		post.addHeader("Authorization", "Bearer-"+token+"");
 		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		response = client.execute(post);
 
@@ -98,18 +120,18 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
 		resultContent = getResultContent(response);
 		System.out.println("Response Content : " + resultContent);
-	
+
 	}
-	
+
 	public void getCalendario() throws ClientProtocolException, IOException {
 
 		String url = BASE_URL + "/calendarios/1";
 
 		HttpGet request = new HttpGet(url);
-		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		request.addHeader("Authorization", "Bearer-"+token+"");
 
 		HttpResponse response = client.execute(request);
-		
+
 		System.out.println("\nGET "+url);
 
 		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
@@ -125,10 +147,10 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 		String url = BASE_URL + "/calendarios";
 
 		HttpGet request = new HttpGet(url);
-		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		request.addHeader("Authorization", "Bearer-"+token+"");
 
 		HttpResponse response = client.execute(request);
-		
+
 		System.out.println("\nGET "+url);
 
 		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
@@ -149,12 +171,12 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 
 		String url = BASE_URL + "/calendarios/4";
 		HttpPut request = new HttpPut(url);
-		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
+		request.addHeader("Authorization", "Bearer-"+token+"");
 		request.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
 		HttpResponse response = client.execute(request);
 
 		System.out.println("\nPUT "+url);
-		
+
 		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
 
 		String resultContent = getResultContent(response);
@@ -166,12 +188,12 @@ public void crearCalendarios() throws ClientProtocolException, IOException {
 	public void deleteCalendario() throws ClientProtocolException, IOException {
 
 		String url = BASE_URL + "/calendarios/2";
-		
+
 		HttpDelete request = new HttpDelete(url);
-		request.addHeader("Authorization", "Bearer-"+TestToken.token+"");
-		
+		request.addHeader("Authorization", "Bearer-"+token+"");
+
 		HttpResponse response = client.execute(request);
-		
+
 		System.out.println("\nDELETE "+url);
 
 		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
