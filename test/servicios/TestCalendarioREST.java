@@ -187,7 +187,7 @@ public class TestCalendarioREST {
 
 	public void deleteCalendario() throws ClientProtocolException, IOException {
 
-		String url = BASE_URL + "/calendarios/2";
+		String url = BASE_URL + "/calendarios/25";
 
 		HttpDelete request = new HttpDelete(url);
 		request.addHeader("Authorization", "Bearer-"+token+"");

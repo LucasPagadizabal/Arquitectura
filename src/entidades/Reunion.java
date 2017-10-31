@@ -18,7 +18,6 @@ import org.hibernate.annotations.NamedQuery;
 @NamedQuery(name=Reunion.BUSCAR_REUNIONES_SUPERPUESTAS,query="SELECT r FROM Reunion r JOIN r.calendario.duenio user  WHERE user.dni=?1 AND NOT(?2 <= r.fechaInicio AND ?3 >= r.fechaFin)")
 @NamedQuery(name=Reunion.BORRAR_DATOS,query="DELETE FROM Reunion r")
 
-
 public class Reunion {
 	
 	public static final String BUSCAR_REUNIONES = "Reunion.BuscarReuniones";

@@ -106,7 +106,7 @@ public class ReunionREST {
 	@Path("/getReunionesSuperpuestas")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Reunion> getReunionesSuperpuestas(@QueryParam("iduser") int iduser, @QueryParam("fechaInicio") String fechaInicio, @QueryParam("fechaFin") String fechaFin) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH:mm");
 		Date reunionIni=null;
 		Date reunionFin=null;
 		try {

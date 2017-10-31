@@ -162,7 +162,7 @@ public class TestReuinonREST {
 		resultContent = getResultContent(response);
 		System.out.println("Response Content : " + resultContent);	
 
-		//Test mismo dia - mismo horario -distinito calendario (superposicion)
+		//Test mismo dia - mismo horario -distinito calendario del mismo usuario (superposicion)
 		jsonObject = mapper.createObjectNode();
 		jsonObject.put("anio", 2017);
 		jsonObject.put("mes", 01);
@@ -183,7 +183,7 @@ public class TestReuinonREST {
 		resultContent = getResultContent(response);
 		System.out.println("Response Content : " + resultContent);	
 
-		//Superposicion de horario en el mismo calendario(superposicion)
+		//Superposicion de horario en el mismo calendario pero en distinta sala(superposicion)
 		jsonObject = mapper.createObjectNode();
 		jsonObject.put("anio", 2017);
 		jsonObject.put("mes", 01);
@@ -224,93 +224,11 @@ public class TestReuinonREST {
 		resultContent = getResultContent(response);
 		System.out.println("Response Content : " + resultContent);
 
-		//usuario Gomez
-
-		jsonObject = mapper.createObjectNode();
-		jsonObject.put("anio", 2017);
-		jsonObject.put("mes", 02);
-		jsonObject.put("dia", 02);
-		jsonObject.put("horaI", 8);
-		jsonObject.put("horaF", 10);
-		jsonObject.put("idSala", 22);
-		jsonObject.put("idCalendario", 6);
-		jsonString = jsonObject.toString();
-
-		post = new HttpPost(url);
-		post.addHeader("Authorization", "Bearer-"+token+"");
-		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
-		response = client.execute(post);
-
-		System.out.println("\nPOST "+url);
-		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
-		resultContent = getResultContent(response);
-		System.out.println("Response Content : " + resultContent);
-
-		jsonObject = mapper.createObjectNode();
-		jsonObject.put("anio", 2017);
-		jsonObject.put("mes", 02);
-		jsonObject.put("dia", 02);
-		jsonObject.put("horaI", 11);
-		jsonObject.put("horaF", 15);
-		jsonObject.put("idSala", 22);
-		jsonObject.put("idCalendario", 6);
-		jsonString = jsonObject.toString();
-
-		post = new HttpPost(url);
-		post.addHeader("Authorization", "Bearer-"+token+"");
-		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
-		response = client.execute(post);
-
-		System.out.println("\nPOST "+url);
-		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
-		resultContent = getResultContent(response);
-		System.out.println("Response Content : " + resultContent);
-
-		jsonObject = mapper.createObjectNode();
-		jsonObject.put("anio", 2017);
-		jsonObject.put("mes", 02);
-		jsonObject.put("dia", 02);
-		jsonObject.put("horaI", 18);
-		jsonObject.put("horaF", 22);
-		jsonObject.put("idSala", 22);
-		jsonObject.put("idCalendario", 6);
-		jsonString = jsonObject.toString();
-
-		post = new HttpPost(url);
-		post.addHeader("Authorization", "Bearer-"+token+"");
-		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
-		response = client.execute(post);
-
-		System.out.println("\nPOST "+url);
-		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
-		resultContent = getResultContent(response);
-		System.out.println("Response Content : " + resultContent);
-
-		jsonObject = mapper.createObjectNode();
-		jsonObject.put("anio", 2017);
-		jsonObject.put("mes", 01);
-		jsonObject.put("dia", 01);
-		jsonObject.put("horaI", 8);
-		jsonObject.put("horaF", 10);
-		jsonObject.put("idSala", 22);
-		jsonObject.put("idCalendario", 6);
-		jsonString = jsonObject.toString();
-
-		post = new HttpPost(url);
-		post.addHeader("Authorization", "Bearer-"+token+"");
-		post.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
-		response = client.execute(post);
-
-		System.out.println("\nPOST "+url);
-		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
-		resultContent = getResultContent(response);
-		System.out.println("Response Content : " + resultContent);
-
 	}
 
 	public void getReunion() throws ClientProtocolException, IOException {
 
-		String url = BASE_URL + "/reuniones/1";
+		String url = BASE_URL + "/reuniones/27";
 
 		HttpGet request = new HttpGet(url);
 		request.addHeader("Authorization", "Bearer-"+token+"");
@@ -345,7 +263,7 @@ public class TestReuinonREST {
 	}
 
 	public void getReunionesEntreFechas() throws ClientProtocolException, IOException{
-		String url = BASE_URL + "/reuniones/getReunionesEntreFechas?day1=2017-10-17&&day2=2017-15-17";
+		String url = BASE_URL + "/reuniones/getReunionesEntreFechas?day1=2017-01-01&&day2=2017-03-01";
 
 		HttpGet request = new HttpGet(url);
 		request.addHeader("Authorization", "Bearer-"+token+"");
@@ -362,7 +280,7 @@ public class TestReuinonREST {
 	}
 
 	public void getReunionesByUserAndDay() throws ClientProtocolException, IOException{
-		String url = BASE_URL + "/reuniones/getReunionesByUserAndDay?iduser=1&&day=2017-10-15";
+		String url = BASE_URL + "/reuniones/getReunionesByUserAndDay?iduser=1&&day=2017-01-01";
 
 		HttpGet request = new HttpGet(url);
 		request.addHeader("Authorization", "Bearer-"+token+"");
@@ -379,14 +297,14 @@ public class TestReuinonREST {
 	}
 
 	public void getReunionesSuperpuestas() throws ClientProtocolException, IOException{
-		String url = BASE_URL + "/reuniones/getReunionesSuperpuestas?iduser=1&&fechaInicio=2017-10-1710:00:00&&fechaFin=2017-10-1713:00:00";
+		String url = BASE_URL + "/reuniones/getReunionesSuperpuestas?iduser=1&&fechaInicio=2017-10-17-10:00&&fechaFin=2017-10-17-13:00";
 
 		HttpGet request = new HttpGet(url);
-
+		request.addHeader("Authorization", "Bearer-"+token+"");
 		HttpResponse response = client.execute(request);
-		request.addHeader("Authorization", "Bearer-"+token+"");	
+		
 		System.out.println("\nGET "+url);
-
+		
 		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
 
 		String resultContent = getResultContent(response);
@@ -415,13 +333,19 @@ public class TestReuinonREST {
 
 	public void updateReunion() throws ClientProtocolException, IOException {
 
+		String url = BASE_URL + "/reuniones/30";
+
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode jsonObject = mapper.createObjectNode();
-		jsonObject.put("nombre", "Test");
-		jsonObject.put("apellido", "JUnit");
+		jsonObject.put("anio", 2030);
+		jsonObject.put("mes", 01);
+		jsonObject.put("dia", 01);
+		jsonObject.put("horaI", 11);
+		jsonObject.put("horaF", 13);
+		jsonObject.put("idSala", 21);
+		jsonObject.put("idCalendario", 2);
 		String jsonString = jsonObject.toString();
 
-		String url = BASE_URL + "/reuniones/30";
 		HttpPut request = new HttpPut(url);
 		request.addHeader("Authorization", "Bearer-"+token+"");
 		request.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
@@ -433,7 +357,6 @@ public class TestReuinonREST {
 
 		String resultContent = getResultContent(response);
 
-		System.out.println("Response Content : " + resultContent);
 
 	}
 }

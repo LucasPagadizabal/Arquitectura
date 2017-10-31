@@ -28,8 +28,8 @@ public class TestUsuarioREST {
 	String token;
 	@Test
 	public void testUsuarioREST() throws ClientProtocolException, IOException {
-		token = getToken();
 		crearUsuarios();
+		token = getToken();
 		getUsuario();
 		listarUsuarios();
 		updateUsuario();
@@ -282,7 +282,7 @@ public class TestUsuarioREST {
 		jsonObject.put("apellido", "JUnit");
 		String jsonString = jsonObject.toString();
 
-		String url = BASE_URL + "/usuarios/1";
+		String url = BASE_URL + "/usuarios/5";
 		HttpPut request = new HttpPut(url);
 		request.addHeader("Authorization", "Bearer-"+token+"");
 		request.setEntity(new StringEntity(jsonString, ContentType.APPLICATION_JSON));
